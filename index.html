@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepak Sharma | Full Stack Developer</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050712;
+            --card: rgba(15, 23, 42, 0.65);
+            --border: rgba(148, 163, 184, 0.25);
+            --text: rgba(226, 232, 240, 0.92);
+            --muted: rgba(226, 232, 240, 0.6);
+            --accent: #60a5fa;
+            --accent2: #a855f7;
+        }
+
+        /* Light theme variables */
+        :root[data-theme="light"] {
+            --bg: #f7f8fc;
+            --card: rgba(255, 255, 255, 0.72);
+            --border: rgba(148, 163, 184, 0.35);
+            --text: rgba(15, 23, 42, 0.9);
+            --muted: rgba(15, 23, 42, 0.6);
+            --accent: #2563eb;
+            --accent2: #9333ea;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            scroll-behavior: smooth;
+        }
+
+        .glass {
+            background: var(--card);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass:hover {
+            border-color: rgba(96, 165, 250, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.01);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .skill-badge {
+            background: rgba(96, 165, 250, 0.15);
+            border: 1px solid rgba(96, 165, 250, 0.35);
+        }
+        .icon {
+            color: rgba(226, 232, 240, 0.75);
+            opacity: 0.95;
+        }
+
+        .icon svg {
+            width: 1.5em;
+            height: 1.5em;
+        }
+        /* Ensure utility text classes stay readable on dark backgrounds */
+        .text-slate-600,
+        .text-slate-700,
+        .text-slate-800,
+        .text-slate-500,
+        .text-gray-400 {
+            color: var(--text) !important;
+        }
+
+        /* Ensure any utility text that is hardcoded white adapts in light theme */
+        :root[data-theme="light"] .text-white,
+        :root[data-theme="light"] .text-white\/80,
+        :root[data-theme="light"] .text-white\/70 {
+            color: var(--text) !important;
+        }
+
+        /* Adjust common background utilities for light theme */
+        :root[data-theme="light"] .bg-white\/10,
+        :root[data-theme="light"] .bg-white\/20 {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Make form fields readable in light theme */
+        :root[data-theme="light"] input,
+        :root[data-theme="light"] textarea {
+            background: rgba(255, 255, 255, 0.7) !important;
+            color: var(--text) !important;
+            border-color: rgba(148, 163, 184, 0.5) !important;
+        }
+
+        :root[data-theme="light"] input::placeholder,
+        :root[data-theme="light"] textarea::placeholder {
+            color: rgba(15, 23, 42, 0.5) !important;
+        }
+
+        :root[data-theme="light"] label {
+            color: rgba(15, 23, 42, 0.85) !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050712;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.35);
+            border-radius: 10px;
+        }
+
+        header {
+            backdrop-filter: blur(18px);
+            background: rgba(5, 7, 18, 0.75);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .nav-link {
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+        }
+
+        .active-link {
+            color: var(--accent);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(12px); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .animate-fadeOut {
+            animation: fadeOut 0.4s ease-in forwards;
+        }
+
+        @media (max-width: 767px) {
+            #mobileMenu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-500/30">
+    <header class="fixed top-0 left-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="#home" class="text-xl font-bold gradient-text">Deepak Sharma</a>
+
+            <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-800">
+                <a href="#about" class="nav-link hover:text-white">About</a>
+                <a href="#work" class="nav-link hover:text-white">Experience</a>
+                <a href="#education" class="nav-link hover:text-white">Education</a>
+                <a href="#projects" class="nav-link hover:text-white">Projects</a>
+                <a href="#certificates" class="nav-link hover:text-white">Certificates</a>
+                <a href="#skills" class="nav-link hover:text-white">Skills</a>
+                <a href="#contact" class="nav-link hover:text-white">Contact</a>
+            </nav>
+
+            <button id="themeToggleBtn" class="hidden md:inline-flex items-center justify-center w-10 h-10 rounded-xl glass border border-white/10" aria-label="Toggle theme">
+                <span id="themeIcon" class="text-lg">🌙</span>
+            </button>
+
+            <button id="menuBtn" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl glass border border-white/10">
+                <span class="text-xl">☰</span>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="hidden max-w-7xl mx-auto px-4 pb-4">
+            <nav class="flex flex-col gap-3 text-sm font-semibold text-slate-800">
+                <a href="#about" class="nav-link py-2 px-4 rounded-xl glass">About</a>
+                <a href="#work" class="nav-link py-2 px-4 rounded-xl glass">Experience</a>
+                <a href="#education" class="nav-link py-2 px-4 rounded-xl glass">Education</a>
+                <a href="#projects" class="nav-link py-2 px-4 rounded-xl glass">Projects</a>
+                <a href="#certificates" class="nav-link py-2 px-4 rounded-xl glass">Certificates</a>
+                <a href="#skills" class="nav-link py-2 px-4 rounded-xl glass">Skills</a>
+                <a href="#contact" class="nav-link py-2 px-4 rounded-xl glass">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-28">
+        <div class="max-w-7xl mx-auto px-4 space-y-10">
+            <section id="home" class="grid gap-10 lg:grid-cols-2 lg:items-center">
+                <div class="space-y-6">
+                    <p class="uppercase tracking-widest text-sm text-slate-800"><span class="gradient-text">Hi, I’m Deepak — full stack developer</span></p>
+                    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-snug">
+                        Building <span id="dynamicText" class="gradient-text">modern web experiences</span> that scale.
+                    </h1>
+                    <p class="max-w-xl text-slate-700 leading-relaxed">
+                        I build full-stack web apps with clean UX, optimized performance, and a focus on real-world outcomes. I enjoy turning ideas into polished products using the MERN stack, Java, and data-driven design.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3">
+                        <a href="resume/Deepak-Cv.pdf" target="_blank" class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-2xl glass border border-white/20 text-sm font-semibold text-white hover:bg-blue-500 hover:text-white transition">
+                            Download Resume
+                        </a>
+                        <a href="resume/Deepak-Cv.pdf" target="_blank" class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-2xl glass border border-white/20 text-sm font-semibold text-white hover:bg-blue-500 hover:text-white transition">
+                            View CV
+                        </a>
+                        <a href="mailto:ds5422173@gmail.com" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-2xl glass border border-white/20 text-sm font-semibold text-white hover:bg-blue-500 hover:text-white transition">
+                            Email Me
+                        </a>
+                        <button id="surpriseBtn" class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-2xl glass border border-white/20 text-sm font-semibold text-white hover:bg-purple-500 hover:text-white transition">
+                            ✨ Surprise Me!
+                        </button>
+                    </div>
+                    <div id="toast" class="fixed bottom-8 right-8 z-50 hidden items-center gap-2 rounded-2xl bg-white/10 px-4 py-3 text-sm font-semibold text-white shadow-lg backdrop-blur-lg">
+                        <span class="text-xl">🎉</span>
+                        <span id="toastMessage">You’re awesome!</span>
+                    </div>
+
+                    
+                </div>
+
+                <div class="relative w-full max-w-sm mx-auto">
+                    <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/15 via-transparent to-purple-500/10 shadow-2xl"></div>
+                    <img src="images/profile2.jpg" alt="Deepak Sharma" class="relative w-full rounded-3xl shadow-2xl shadow-blue-500/20" />
+                </div>
+            </section>
+
+            <section id="about" class="glass p-8 rounded-[2.5rem]">
+                <h2 class="text-2xl font-bold mb-4 gradient-text">About</h2>
+                <p class="text-slate-700 leading-relaxed">
+                    I’m a Computer Science Engineering student with a passion for building web applications and working across the full stack. I love collaborating in product teams, solving problems with code, and using data to make smarter decisions.
+                </p>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-semibold text-slate-700">Location</h3>
+                        <p class="text-white/80">Agra, Uttar Pradesh, India</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-semibold text-slate-700">Email</h3>
+                        <p class="text-white/80">ds5422173@gmail.com</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-semibold text-slate-700">Phone</h3>
+                        <p class="text-white/80">+91 90394 81161</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-semibold text-slate-700">Availability</h3>
+                        <p class="text-gray-400">Open to full-time roles & contract work</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="education" class="glass p-8 rounded-[2.5rem]">
+                <h2 class="text-2xl font-bold mb-4 gradient-text">Education</h2>
+                <div class="grid gap-6">
+                    <div class="glass p-6 rounded-2xl">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">Bachelor of Technology</h3>
+                                <p class="text-sm text-blue-400">Lovely Professional University</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">07/2023 – Present</span>
+                        </div>
+                        <ul class="text-sm text-slate-700 space-y-2 mt-4 list-disc pl-5">
+                            <li>Location: Phagwara, Punjab</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">Advance Diploma in Computer Application</h3>
+                                <p class="text-sm text-blue-400">Dr. B.R Ambedkar Computer Saksharta Mission</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">07/2021 – 07/2022</span>
+                        </div>
+                        <ul class="text-sm text-slate-700 space-y-2 mt-4 list-disc pl-5">
+                            <li>Location: Agra, Uttar Pradesh</li>
+                            <li>Percentage: 90%</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">12th Grade</h3>
+                                <p class="text-sm text-blue-400">Vijaya International School</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">07/2020 – 07/2021</span>
+                        </div>
+                        <ul class="text-sm text-slate-700 space-y-2 mt-4 list-disc pl-5">
+                            <li>Location: Agra, Uttar Pradesh</li>
+                            <li>Percentage: 71%</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">10th Grade</h3>
+                                <p class="text-sm text-blue-400">Shivalik Public School</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">07/2018 – 07/2019</span>
+                        </div>
+                        <ul class="text-sm text-slate-700 space-y-2 mt-4 list-disc pl-5">
+                            <li>Location: Agra, Uttar Pradesh</li>
+                            <li>Percentage: 86%</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="work" class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold">Experience</h2>
+                    <span class="text-sm text-slate-700">Latest roles & contributions</span>
+                </div>
+
+                <div class="grid gap-6">
+                    <div class="glass p-8 rounded-[2.5rem]">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">AasaMedChem Pvt. Ltd.</h3>
+                                <p class="text-sm text-blue-400">Full Stack Developer</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">Jan 2026 – Present</span>
+                        </div>
+
+                        <ul class="text-sm text-slate-700 space-y-3 mt-6 list-disc pl-5">
+                            <li>Built and shipped platform features that increased user engagement and reduced load times.</li>
+                            <li>Conducted data research to support product decision-making and operational efficiency.</li>
+                            <li>Managed social channels and created design assets using Canva.</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass p-8 rounded-[2.5rem]">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">University Sports Council</h3>
+                                <p class="text-sm text-blue-400">Technical Volunteer</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">Feb 2025 – Present</span>
+                        </div>
+                        <ul class="text-sm text-slate-700 space-y-3 mt-6 list-disc pl-5">
+                            <li>Managed backend technical operations for a university-level BGMI tournament, overseeing documentation and match features for 200+ participants to ensure seamless execution.</li>
+                            <li>Orchestrated a Real Cricket gaming event end-to-end with KRAFTON, coordinating logistics and live matches to achieve a 90% participant satisfaction rate.</li>
+                            <li>Contributed to the General Sports Championship (GSC 2024–26) as a core media team member, directing videography, design, and volunteer efforts for 500+ attendees.</li>
+                            <li>Enhanced event production efficiency by implementing streamlined media workflows, reducing post-event processing time by 25%.</li>
+                            <li>Spearheaded technical coordination for university-wide sports and esports events, driving high-quality media coverage and increasing audience engagement.</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass p-8 rounded-[2.5rem]">
+                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <h3 class="text-xl font-bold">National Service Scheme</h3>
+                                <p class="text-sm text-purple-400">Executive Leader</p>
+                            </div>
+                            <span class="text-xs glass px-3 py-1 rounded-full">Aug 2023 – July 2025</span>
+                        </div>
+                        <ul class="text-sm text-slate-700 space-y-3 mt-6 list-disc pl-5">
+                            <li>Led and coordinated a team of 100+ volunteers in community service initiatives, engaging 2,000+ students and achieving a 25% increase in volunteer participation.</li>
+                            <li>Orchestrated a 7-Day Special Winter Camp, leading the 1st Ranker Team to secure the "Best Team Award" for exceptional social impact as recognized by the local Sarpanch.</li>
+                            <li>Executed 10+ large-scale social awareness campaigns, including Swachh Bharat Abhiyan and anti-drug drives, impacting 5,000+ community members and driving sustainable behavioral change.</li>
+                            <li>Directed rural development initiatives in adopted villages, managing 200+ hours of Shramdaan to improve infrastructure and education access for 300+ residents.</li>
+                            <li>Facilitated 5+ Health Camps and Blood Donation Drives, ensuring 100% health and safety compliance while providing medical services to 1,000+ individuals in underserved areas.</li> 
+
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="projects" class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold">Projects</h2>
+                    <span class="text-sm text-slate-700">A few highlights</span>
+                </div>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="glass p-8 rounded-[2.5rem] relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <span class="icon text-6xl" aria-label="globe icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18.5c-4.694 0-8.5-3.806-8.5-8.5S7.306 3.5 12 3.5 20.5 7.306 20.5 12 16.694 20.5 12 20.5z"/>
+                                    <path d="M6.5 12c0-1.756 1.027-3.268 2.5-4.03v8.06A4.51 4.51 0 0 1 6.5 12zm2.5-6.845A8.49 8.49 0 0 1 12 3.5c1.533 0 2.95.444 4.2 1.205A12.276 12.276 0 0 0 12 9.75 12.276 12.276 0 0 0 9 5.155zM12 20.5a8.495 8.495 0 0 1-2.5-.415V15.5c0-.552.448-1 1-1h3c.552 0 1 .448 1 1v4.585A8.495 8.495 0 0 1 12 20.5zM17.5 12c0 1.756-1.027 3.268-2.5 4.03V7.97c1.473.762 2.5 2.274 2.5 4.03z"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">LearnEase — Learning Platform</h3>
+                        <p class="text-blue-400 text-sm mb-4">MERN Stack</p>
+                        <p class="text-slate-700 text-sm max-w-lg">
+                            Full-stack learning platform with course management, user profiles, and interactive modules.
+                        </p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="#" class="text-xs font-semibold px-4 py-2 rounded-full glass hover:border-blue-400">View Source</a>
+                            <a href="#" class="text-xs font-semibold px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-400">Live Demo</a>
+                        </div>
+                    </div>
+
+                    <div class="glass p-8 rounded-[2.5rem] relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <span class="icon text-6xl" aria-label="gear icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.14 12.94a7.014 7.014 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a6.968 6.968 0 0 0-1.6-.93l-.36-2.54A.5.5 0 0 0 14.2 2h-4.4a.5.5 0 0 0-.49.42l-.36 2.54c-.57.2-1.11.48-1.6.93l-2.39-.96a.5.5 0 0 0-.6.22L2.8 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.62-.06.94s.02.63.06.94L2.92 14.5a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96c.49.45 1.03.82 1.6.93l.36 2.54c.05.27.28.46.55.46h4.4c.27 0 .5-.19.55-.46l.36-2.54c.57-.2 1.11-.48 1.6-.93l2.39.96c.24.1.51 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Load Balancing Simulation</h3>
+                        <p class="text-purple-400 text-sm mb-4">Java • Algorithms</p>
+                        <p class="text-slate-700 text-sm max-w-lg">
+                            Console application that simulates optimized task distribution, improving throughput by 30% with custom heuristics.
+                        </p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="#" class="text-xs font-semibold px-4 py-2 rounded-full glass hover:border-purple-400">View Code</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="certificates" class="space-y-6">
+                <div class="glass p-8 rounded-[2.5rem]">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold">Certificates</h2>
+                        <div class="flex items-center gap-3">
+                            <button id="certPrev" class="inline-flex items-center justify-center w-10 h-10 rounded-full glass border border-white/20 text-sm font-semibold hover:bg-blue-500 hover:text-white transition">←</button>
+                            <span id="certLabel" class="text-sm text-slate-500">Certificate 1 of 3</span>
+                            <button id="certNext" class="inline-flex items-center justify-center w-10 h-10 rounded-full glass border border-white/20 text-sm font-semibold hover:bg-blue-500 hover:text-white transition">→</button>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6 md:grid-cols-2 items-start mt-8">
+                        <div>
+                            <h3 id="certName" class="text-xl font-bold mb-2">Certificate Title</h3>
+                            <p id="certIssuer" class="text-sm text-slate-500 mb-1">Issuer</p>
+                            <p id="certDate" class="text-sm text-slate-500 mb-4">Date</p>
+                            <p id="certDesc" class="text-sm text-slate-700 mb-6">Certificate description will appear here. Use the arrows to switch between certificates.</p>
+                            <a id="certLink" href="#" target="_blank" class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-blue-500 hover:bg-blue-400 text-sm font-semibold text-white transition">
+                                View Certificate
+                            </a>
+                        </div>
+
+                        <div class="flex items-center justify-center">
+                            <img id="certImage" src="certificates/cert1.jpg" alt="Certificate image" class="max-h-80 object-contain rounded-2xl border border-white/10" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" class="glass p-8 rounded-[2.5rem]">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold">Skills</h2>
+                    <span class="text-sm text-slate-700">Tools & technologies</span>
+                </div>
+
+                <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">MERN Stack</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">Java</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">JavaScript</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">Python</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">Data Analysis</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">Git / GitHub</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">UI/UX Design</span>
+                    <span class="skill-badge px-4 py-3 rounded-2xl text-xs font-semibold">Canva</span>
+                </div>
+            </section>
+
+            <section id="contact" class="glass p-8 rounded-[2.5rem]">
+                <h2 class="text-2xl font-bold mb-4">Contact</h2>
+                <p class="text-slate-700 leading-relaxed mb-6">
+                    Want to work together or just say hi? Send me a message and I’ll get back to you soon.
+                </p>
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-4">
+                        <p class="text-sm font-semibold text-slate-700">Email</p>
+                        <p class="text-white/80">ds5422173@gmail.com</p>
+
+                        <p class="text-sm font-semibold text-slate-700">Location</p>
+                        <p class="text-white/80">Agra, Uttar Pradesh, India</p>
+
+                        <div class="flex gap-3 mt-4">
+                            <a href="https://linkedin.com/in/deepak-sharma-7733aa203/" class="glass px-4 py-2 rounded-xl text-sm font-semibold hover:text-blue-400">LinkedIn</a>
+                            <a href="https://github.com/deepaksharma1397" class="glass px-4 py-2 rounded-xl text-sm font-semibold hover:text-purple-400">GitHub</a>
+                        </div>
+                    </div>
+
+                    <form class="space-y-4">
+                        <div>
+                            <label class="text-sm font-semibold text-slate-200" for="name">Name</label>
+                            <input id="name" type="text" placeholder="Your name" class="mt-2 w-full rounded-2xl border border-white/20 bg-slate-900/40 px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400" />
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-slate-200" for="email">Email</label>
+                            <input id="email" type="email" placeholder="you@example.com" class="mt-2 w-full rounded-2xl border border-white/20 bg-slate-900/40 px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400" />
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-slate-200" for="message">Message</label>
+                            <textarea id="message" rows="4" placeholder="What can I help you build?" class="mt-2 w-full rounded-2xl border border-white/20 bg-slate-900/40 px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-400"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-2xl bg-blue-500 hover:bg-blue-400 font-semibold transition">
+                            Send message
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <footer class="text-center py-8 text-slate-600 text-sm">
+                <p>© <span id="year"></span> Deepak Sharma. Built with HTML, CSS & ❤️.</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+
+        const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+        };
+
+        const initTheme = () => {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved || (prefersDark ? 'dark' : 'light');
+            setTheme(theme);
+        };
+
+        themeToggleBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        initTheme();
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Certificate carousel
+        const certificates = [
+            {
+                name: 'Data Structures and Algorithms using Java Programming',
+                issuer: 'CipherSchools',
+                date: 'July 2025',
+                description: 'Completed comprehensive training on core computer science fundamentals, focusing on efficient algorithm design and data management. Developed proficiency in implementing complex data structures and optimizing code performance using Java. Strengthened problem-solving capabilities through rigorous training in logic building and computational efficiency.',
+                image: '/certificates/cert1.jpg',
+                link: '/certificates/cert1.jpg'
+            },
+            {
+                name: 'Build Generative AI Apps and Solutions with No-Code Tools',
+                issuer: 'Infosys Springboard',
+                date: 'August 2025',
+                description: 'Certified in developing AI-powered applications without traditional coding, utilizing No-Code platforms to accelerate deployment. Learned to integrate Generative AI solutions into existing business processes to solve real-world problems. Focused on rapid prototyping and the ethical implementation of AI tools within a professional ecosystem.',
+                image: '/certificates/cert2.jpg',
+                link: '/certificates/cert2.jpg'
+            },
+            {
+                name: 'ChatGPT-4 Prompt Engineering: ChatGPT, Generative AI & LLM',
+                issuer: 'Infosys Springboard',
+                date: 'August 2025',
+                description: 'Mastered advanced techniques for interacting with Large Language Models (LLMs), including structured prompting and context optimization. Gained expertise in leveraging Generative AI to enhance productivity, automate workflows, and improve technical documentation. Explored the architecture of GPT-4 to understand model behavior and refine output accuracy for professional use cases.',
+                image: '/certificates/cert3.jpg',
+                link: '/certificates/cert3.jpg'
+            }
+        ];
+
+        const certName = document.getElementById('certName');
+        const certIssuer = document.getElementById('certIssuer');
+        const certDate = document.getElementById('certDate');
+        const certDesc = document.getElementById('certDesc');
+        const certImage = document.getElementById('certImage');
+        const certLink = document.getElementById('certLink');
+        const certLabel = document.getElementById('certLabel');
+
+        let certIndex = 0;
+
+        function updateCertificate() {
+            const cert = certificates[certIndex];
+            certName.textContent = cert.name;
+            certIssuer.textContent = cert.issuer;
+            certDate.textContent = cert.date;
+            certDesc.textContent = cert.description;
+            certImage.src = cert.image;
+            certLink.href = cert.link;
+            certLabel.textContent = `Certificate ${certIndex + 1} of ${certificates.length}`;
+        }
+
+        document.getElementById('certPrev').addEventListener('click', () => {
+            certIndex = (certIndex - 1 + certificates.length) % certificates.length;
+            updateCertificate();
+        });
+
+        document.getElementById('certNext').addEventListener('click', () => {
+            certIndex = (certIndex + 1) % certificates.length;
+            updateCertificate();
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('animate-fadeIn');
+
+            setTimeout(() => {
+                toast.classList.add('animate-fadeOut');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                    toast.classList.remove('animate-fadeIn', 'animate-fadeOut');
+                }, 400);
+            }, 2000);
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+            showToast('Boom! Confetti activated 🎊');
+        }
+
+        document.getElementById('surpriseBtn').addEventListener('click', () => {
+            triggerConfetti();
+        });
+
+        // Fun headline animation
+        const dynamicPhrases = [
+            'modern web experiences',
+            'immersive interfaces',
+            'snappy web apps',
+            'pixel-perfect products',
+            'interactive journeys'
+        ];
+        let dynamicIndex = 0;
+        const dynamicTextEl = document.getElementById('dynamicText');
+
+        function rotateHeadline() {
+            dynamicIndex = (dynamicIndex + 1) % dynamicPhrases.length;
+            dynamicTextEl.classList.add('animate-fadeOut');
+            setTimeout(() => {
+                dynamicTextEl.textContent = dynamicPhrases[dynamicIndex];
+                dynamicTextEl.classList.remove('animate-fadeOut');
+                dynamicTextEl.classList.add('animate-fadeIn');
+                setTimeout(() => dynamicTextEl.classList.remove('animate-fadeIn'), 400);
+            }, 250);
+        }
+
+        setInterval(rotateHeadline, 3600);
+
+        updateCertificate();
+    </script>
+</body>
+</html>
+ 
