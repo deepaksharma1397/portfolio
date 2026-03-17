@@ -192,7 +192,7 @@
                 <a href="#contact" class="nav-link hover:text-white">Contact</a>
             </nav>
 
-            <button id="themeToggleBtn" class="hidden md:inline-flex items-center justify-center w-10 h-10 rounded-xl glass border border-white/10" aria-label="Toggle theme">
+            <button id="themeToggleBtn" class="inline-flex items-center justify-center w-10 h-10 rounded-xl glass border border-white/10" aria-label="Toggle theme">
                 <span id="themeIcon" class="text-lg">🌙</span>
             </button>
 
@@ -554,8 +554,8 @@
 
         const initTheme = () => {
             const saved = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = saved || (prefersDark ? 'dark' : 'light');
+            // Default to dark mode unless the user has explicitly chosen otherwise.
+            const theme = saved || 'dark';
             setTheme(theme);
         };
 
